@@ -66,7 +66,7 @@ export async function getStaticPaths() {
   client.close()
 
   return {
-      fallback: false, // if false, we are limiting pages to those specified in paths. If true, we generate dynamically.
+      fallback: 'blocking', // if false, we are limiting pages to those specified in paths. If true, we generate dynamically.
       paths: meetups.map((meetup) => ({params: { meetupId: meetup._id.toString()}})),
   }
 }
