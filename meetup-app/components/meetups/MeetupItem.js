@@ -21,9 +21,18 @@ function MeetupItem(props) {
           <h3>{props.title}</h3>
           <address>{props.address}</address>
         </div>
-        <div className={classes.actions}>
-          <button onClick={showDetailsHandler}>Show Details</button>
-        </div>
+        {props.showButton ? 
+        
+        <>
+          <div className={classes.actions}>
+            <button onClick={showDetailsHandler}>Show Details</button>
+          </div>
+        </>
+        
+
+        : <div className={classes.content}>
+            <p>{props.description}</p>
+          </div>}
       </Card>
     </li>
   );

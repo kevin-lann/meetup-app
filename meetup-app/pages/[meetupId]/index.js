@@ -1,12 +1,18 @@
 import MeetupDetail from '../../components/meetups/MeetupDetail'
+import {useRouter} from 'next/router'
 
 const MeetupDetails = () => {
+
+  const router = useRouter()
+  const meetupId = router.query.meetupId
+
   return <>
     <MeetupDetail 
       image="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       title="Join for free robux"
       address="202 Joel st, Africa"
       description="We are offering free giveaways!"
+      id={meetupId}
     />
   </>
 }
