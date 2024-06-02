@@ -1,3 +1,7 @@
+# Meeetup central
+Try it live: https://meetup-central.vercel.app/
+This is a next.js/react/MongoDB full stack application for individuals to post and find social events, meetings, and more.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
