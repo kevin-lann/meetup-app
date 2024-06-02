@@ -1,5 +1,6 @@
 import MeetupList from "../components/meetups/MeetupList"
 import { MongoClient } from 'mongodb'
+import Head from 'next/head'
 
 const DUMMY_DATA = [
   {
@@ -28,9 +29,14 @@ const HomePage = (props) => {
   // },[])
   // ------------------------------------------------------------------------
 
-  return (
-      <MeetupList meetups={props.meetups}/>
-  )
+  
+  return <>
+    <Head>
+      <title>Meetup Central</title>
+    </Head>
+    <MeetupList meetups={props.meetups}/>
+  </>
+    
 }
 
 // getStaticprops ---------------------------------------------------------

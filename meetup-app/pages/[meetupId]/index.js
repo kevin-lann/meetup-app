@@ -1,17 +1,23 @@
 import MeetupDetail from '../../components/meetups/MeetupDetail'
+import { MongoClient } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import {useRouter} from 'next/router'
+import Head from 'next/head'
 
-const MeetupDetails = () => {
+const MeetupDetails = (props) => {
 
   const router = useRouter()
   const meetupId = router.query.meetupId
 
   return <>
+    <Head>
+      <title>{props.meetupData.title}</title>
+    </Head>
     <MeetupDetail 
-      image="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-      title="Join for free robux"
-      address="202 Joel st, Africa"
-      description="We are offering free giveaways!"
+      image={props.meetupData.image}
+      title={props.meetupData.title}
+      address={props.meetupData.address}
+      description={props.meetupData.description}
       id={meetupId}
     />
   </>
@@ -23,15 +29,24 @@ export async function getStaticProps(context) {
   // SOL: use context
   const meetupId = context.params.meetupId
 
+  // fetch all Ids from database/API
+  const client = await MongoClient.connect("mongodb+srv://kevinlan416:Lan000000@cluster0.sd7qiud.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  const db = client.db()
+ 
+  const meetupsCollection = db.collection('meetups')
+  const selectedMeetup = await meetupsCollection.findOne({_id: ObjectId.createFromHexString(meetupId)})
+
+  client.close()
+
   return {
     props: {
       meetupData: {
-          image: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          title: "Join for free robux",
-          address: "202 Joel st, Africa",
-          description: "We are offering free giveaways!",
-          id: meetupId
-      }
+        id: selectedMeetup._id.toString(),
+        title: selectedMeetup.title,
+        address: selectedMeetup.address,
+        image: selectedMeetup.image,
+        description: selectedMeetup.description,
+      },
     }
   }
 }
@@ -42,16 +57,17 @@ export async function getStaticProps(context) {
 // We return back all the dynamic values that is needed for pregeneration.
 export async function getStaticPaths() {
   // fetch all Ids from database/API
+  const client = await MongoClient.connect("mongodb+srv://kevinlan416:Lan000000@cluster0.sd7qiud.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  const db = client.db()
+
+  const meetupsCollection = db.collection('meetups')
+  const meetups = await meetupsCollection.find({}, {_id: 1}).toArray() // only get _ids
+
+  client.close()
+
   return {
       fallback: false, // if false, we are limiting pages to those specified in paths. If true, we generate dynamically.
-      paths: [
-          {params: {
-              meetupId: 'm1'
-          }},
-          {params: {
-              meetupId: 'm2'
-          }},
-      ]
+      paths: meetups.map((meetup) => ({params: { meetupId: meetup._id.toString()}})),
   }
 }
 
