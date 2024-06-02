@@ -30,7 +30,7 @@ export async function getStaticProps(context) {
   const meetupId = context.params.meetupId
 
   // fetch all Ids from database/API
-  const client = await MongoClient.connect("mongodb+srv://kevinlan416:Lan000000@cluster0.sd7qiud.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  const client = await MongoClient.connect(process.env.DATABASE_URI)
   const db = client.db()
  
   const meetupsCollection = db.collection('meetups')
@@ -57,7 +57,7 @@ export async function getStaticProps(context) {
 // We return back all the dynamic values that is needed for pregeneration.
 export async function getStaticPaths() {
   // fetch all Ids from database/API
-  const client = await MongoClient.connect("mongodb+srv://kevinlan416:Lan000000@cluster0.sd7qiud.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  const client = await MongoClient.connect(process.env.DATABASE_URI)
   const db = client.db()
 
   const meetupsCollection = db.collection('meetups')

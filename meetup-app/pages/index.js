@@ -54,7 +54,7 @@ const HomePage = (props) => {
 export async function getStaticProps() {
   // fetch data from API
   //(we dont even have to extract this to api folder because this code does not run in clientside)
-  const client = await MongoClient.connect("mongodb+srv://kevinlan416:Lan000000@cluster0.sd7qiud.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  const client = await MongoClient.connect(process.env.DATABASE_URI)
   const db = client.db()
 
   const meetupsCollection = db.collection('meetups')
