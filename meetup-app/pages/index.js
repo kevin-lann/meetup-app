@@ -1,4 +1,5 @@
 import MeetupList from "../components/meetups/MeetupList"
+import { MongoClient } from 'mongodb'
 
 const DUMMY_DATA = [
   {
@@ -45,13 +46,25 @@ const HomePage = (props) => {
   // -> therefore data is never less than 10 s old
 
 export async function getStaticProps() {
-  // say we fetch data from an API
+  // fetch data from API
+  //(we dont even have to extract this to api folder because this code does not run in clientside)
+  const client = await MongoClient.connect("mongodb+srv://kevinlan416:Lan000000@cluster0.sd7qiud.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  const db = client.db()
+
+  const meetupsCollection = db.collection('meetups')
+
+  const meetups = await meetupsCollection.find().toArray()
 
   return {
     props: {
-      meetups: DUMMY_DATA,
+      meetups: meetups.map((meetup) => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString()
+      })),
     },
-    revalidate: 10,
+    revalidate: 2,
   };
 } 
 
